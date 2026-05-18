@@ -1,0 +1,13 @@
+## Build output
+dist
+build
+
+# Deps
+node_modules
+
+## Env
+.env
+.env.production
+
+## Misc
+.DS_Store
