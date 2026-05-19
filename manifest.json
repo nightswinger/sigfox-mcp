@@ -1,0 +1,56 @@
+{
+  "manifest_version": "0.3",
+  "name": "sigfox-mcp",
+  "display_name": "Sigfox MCP",
+  "version": "1.0.0",
+  "description": "MCP server exposing Sigfox device and message APIs.",
+  "long_description": "A Model Context Protocol (MCP) server that exposes the Sigfox cloud API as tools. Lets an LLM look up Sigfox device metadata and recent uplink messages on behalf of the user. Authenticates with a Sigfox API access (login / password) credential pair.",
+  "author": {
+    "name": "nightswinger",
+    "email": "stardustkids83@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nightswinger/sigfox-mcp.git"
+  },
+  "homepage": "https://github.com/nightswinger/sigfox-mcp",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": {
+        "SIGFOX_LOGIN": "${user_config.login}",
+        "SIGFOX_PASSWORD": "${user_config.password}"
+      }
+    }
+  },
+  "user_config": {
+    "login": {
+      "type": "string",
+      "title": "Sigfox API Login",
+      "description": "API access login identifier issued from the Sigfox backend (Group > API access).",
+      "required": true,
+      "sensitive": false
+    },
+    "password": {
+      "type": "string",
+      "title": "Sigfox API Password",
+      "description": "API access password (secret) paired with the login above.",
+      "required": true,
+      "sensitive": true
+    }
+  },
+  "tools": [
+    {
+      "name": "sigfox-get-device",
+      "description": "Retrieves detailed information about a specific Sigfox device using its unique identifier."
+    },
+    {
+      "name": "sigfox-get-device-messages",
+      "description": "Retrieves the list of messages received from a specific Sigfox device, with optional time range and pagination."
+    }
+  ],
+  "tools_generated": false
+}
