@@ -33,7 +33,7 @@ const main = async () => {
 
   const transport = new StdioServerTransport();
 
-  console.log('Starting MCP server...');
+  console.error('Starting MCP server...');
   const server = new McpServer({ name: 'my-server', version: '1.0.0' });
 
   const client = getSigfoxClient(login, password);
