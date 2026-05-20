@@ -111,3 +111,15 @@ export interface DeviceMessagesResponse {
   data: DeviceMessage[];
   paging: Paging;
 }
+
+export interface GetCoveragePredictionsOptions {
+  lat: number;
+  lng: number;
+  radius?: number;
+  groupId?: string;
+}
+
+export interface CoveragePredictionsResponse {
+  locationCovered: boolean;
+  margins: number[];
+}

@@ -1,6 +1,8 @@
 import type {
+  CoveragePredictionsResponse,
   Device,
   DeviceMessagesResponse,
+  GetCoveragePredictionsOptions,
   GetDeviceMessagesOptions,
   GetDeviceOptions,
 } from './types.js';
@@ -67,5 +69,18 @@ export class SigfoxAPIClient {
       `/devices/${deviceId}/messages`,
       queryParams,
     );
+  }
+
+  async getCoveragePredictions(
+    options: GetCoveragePredictionsOptions,
+  ): Promise<CoveragePredictionsResponse> {
+    const queryParams: Record<string, string> = {
+      lat: String(options.lat),
+      lng: String(options.lng),
+    };
+    if (options.radius !== undefined) queryParams.radius = String(options.radius);
+    if (options.groupId !== undefined) queryParams.groupId = options.groupId;
+
+    return this.request<CoveragePredictionsResponse>('/coverages/global/predictions', queryParams);
   }
 }

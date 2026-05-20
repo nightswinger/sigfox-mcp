@@ -50,6 +50,10 @@
     {
       "name": "sigfox-get-device-messages",
       "description": "Retrieves the list of messages received from a specific Sigfox device, with optional time range and pagination."
+    },
+    {
+      "name": "sigfox-get-coverage-predictions",
+      "description": "Retrieve Sigfox global coverage predictions for a given latitude and longitude. Returns coverage margins (dB) for redundancy levels 1, 2, and 3."
     }
   ],
   "tools_generated": false
