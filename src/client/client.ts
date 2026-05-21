@@ -3,10 +3,12 @@ import type {
   Device,
   DeviceMessagesResponse,
   DeviceTypesResponse,
+  DevicesResponse,
   GetCoveragePredictionsOptions,
   GetDeviceMessagesOptions,
   GetDeviceOptions,
   GetDeviceTypesOptions,
+  GetDevicesOptions,
 } from './types.js';
 
 const SIGFOX_BASE_URL = 'https://api.sigfox.com/v2';
@@ -84,6 +86,23 @@ export class SigfoxAPIClient {
     if (options.groupId !== undefined) queryParams.groupId = options.groupId;
 
     return this.request<CoveragePredictionsResponse>('/coverages/global/predictions', queryParams);
+  }
+
+  async getDevices(options: GetDevicesOptions = {}): Promise<DevicesResponse> {
+    const deep = options.deep ?? true;
+    const queryParams: Record<string, string> = { deep: String(deep) };
+    if (options.id) queryParams.id = options.id;
+    if (options.groupIds) queryParams.groupIds = options.groupIds;
+    if (options.deviceTypeId) queryParams.deviceTypeId = options.deviceTypeId;
+    if (options.operatorId) queryParams.operatorId = options.operatorId;
+    if (options.sort) queryParams.sort = options.sort;
+    if (options.minId) queryParams.minId = options.minId;
+    if (options.maxId) queryParams.maxId = options.maxId;
+    if (options.fields) queryParams.fields = options.fields;
+    if (options.limit !== undefined) queryParams.limit = String(options.limit);
+    if (options.offset !== undefined) queryParams.offset = String(options.offset);
+
+    return this.request<DevicesResponse>('/devices/', queryParams);
   }
 
   async getDeviceTypes(

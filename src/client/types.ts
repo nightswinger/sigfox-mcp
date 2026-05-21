@@ -3,6 +3,11 @@ export interface GetDeviceOptions {
   authorizations?: boolean;
 }
 
+export interface DeviceRef {
+  id?: string;
+  name?: string;
+}
+
 export interface Device {
   id: string;
   name: string;
@@ -15,6 +20,28 @@ export interface Device {
   creationTime?: number;
   automaticRenewal?: boolean;
   activable?: boolean;
+  deviceType?: DeviceRef;
+  group?: DeviceRef;
+  contract?: DeviceRef;
+}
+
+export interface GetDevicesOptions {
+  id?: string;
+  groupIds?: string;
+  deviceTypeId?: string;
+  operatorId?: string;
+  sort?: string;
+  minId?: string;
+  maxId?: string;
+  fields?: string;
+  limit?: number;
+  offset?: number;
+  deep?: boolean;
+}
+
+export interface DevicesResponse {
+  data: Device[];
+  paging: Paging;
 }
 
 export interface GetDeviceMessagesOptions {

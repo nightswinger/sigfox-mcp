@@ -18,3 +18,4 @@ Sigfox MCP is distributed as an MCPB bundle (`sigfox-mcp-<version>.mcpb`).
 | `sigfox-get-device-messages` | Retrieves the list of messages received from a specific Sigfox device, with optional time range and pagination. |
 | `sigfox-get-coverage-predictions` | Retrieve Sigfox global coverage predictions for a given latitude and longitude. Returns coverage margins (dB) for redundancy levels 1, 2, and 3. |
 | `sigfox-list-device-types` | List Sigfox device types with optional filters (group, contract, name) and pagination. |
+| `sigfox-list-devices` | List Sigfox devices with optional filters (id, group, device type, operator, sort, id range) and pagination. |
