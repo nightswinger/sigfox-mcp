@@ -71,7 +71,13 @@ const repetitionSchema = z
   .object({
     nseq: z.number().optional().describe('nseq of the repetition.'),
     rssi: z.string().optional().describe('Received Signal Strength Indication (dBm).'),
-    freq: z.number().optional().describe('Frequency at which the message has been received (Hz).'),
+    freq: z
+      .number()
+      .or(z.string())
+      .optional()
+      .describe(
+        'Frequency at which the message has been received (Hz). May be the literal string "N/A" when unavailable.',
+      ),
     repeated: z
       .boolean()
       .optional()

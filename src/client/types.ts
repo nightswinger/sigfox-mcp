@@ -73,7 +73,7 @@ export interface MinBaseStationWithType {
 export interface Repetition {
   nseq?: number;
   rssi?: string;
-  freq?: number;
+  freq?: number | string;
   repeated?: boolean;
 }
 
