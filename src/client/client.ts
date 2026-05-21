@@ -2,9 +2,11 @@ import type {
   CoveragePredictionsResponse,
   Device,
   DeviceMessagesResponse,
+  DeviceTypesResponse,
   GetCoveragePredictionsOptions,
   GetDeviceMessagesOptions,
   GetDeviceOptions,
+  GetDeviceTypesOptions,
 } from './types.js';
 
 const SIGFOX_BASE_URL = 'https://api.sigfox.com/v2';
@@ -82,5 +84,21 @@ export class SigfoxAPIClient {
     if (options.groupId !== undefined) queryParams.groupId = options.groupId;
 
     return this.request<CoveragePredictionsResponse>('/coverages/global/predictions', queryParams);
+  }
+
+  async getDeviceTypes(
+    options: GetDeviceTypesOptions = {},
+  ): Promise<DeviceTypesResponse> {
+    const deep = options.deep ?? true;
+    const queryParams: Record<string, string> = { deep: String(deep) };
+    if (options.groupIds) queryParams.groupIds = options.groupIds;
+    if (options.contractId) queryParams.contractId = options.contractId;
+    if (options.name) queryParams.name = options.name;
+    if (options.fields) queryParams.fields = options.fields;
+    if (options.sort) queryParams.sort = options.sort;
+    if (options.limit !== undefined) queryParams.limit = String(options.limit);
+    if (options.offset !== undefined) queryParams.offset = String(options.offset);
+
+    return this.request<DeviceTypesResponse>('/device-types', queryParams);
   }
 }

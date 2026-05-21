@@ -54,6 +54,10 @@
     {
       "name": "sigfox-get-coverage-predictions",
       "description": "Retrieve Sigfox global coverage predictions for a given latitude and longitude. Returns coverage margins (dB) for redundancy levels 1, 2, and 3."
+    },
+    {
+      "name": "sigfox-list-device-types",
+      "description": "List Sigfox device types with optional filters (group, contract, name) and pagination."
     }
   ],
   "tools_generated": false

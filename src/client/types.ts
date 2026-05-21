@@ -123,3 +123,45 @@ export interface CoveragePredictionsResponse {
   locationCovered: boolean;
   margins: number[];
 }
+
+export interface GetDeviceTypesOptions {
+  groupIds?: string;
+  contractId?: string;
+  name?: string;
+  fields?: string;
+  sort?: string;
+  limit?: number;
+  offset?: number;
+  deep?: boolean;
+}
+
+export interface DeviceTypeGroupRef {
+  id?: string;
+  name?: string;
+}
+
+export interface DeviceTypeContractRef {
+  id?: string;
+  name?: string;
+}
+
+export interface DeviceType {
+  id: string;
+  name: string;
+  description?: string;
+  downlinkMode?: number;
+  payloadType?: number;
+  payloadConfig?: string;
+  keepAlive?: number;
+  alertEmail?: string;
+  automaticRenewal?: boolean;
+  group?: DeviceTypeGroupRef;
+  contract?: DeviceTypeContractRef;
+  creationTime?: number;
+  lastEditionTime?: number;
+}
+
+export interface DeviceTypesResponse {
+  data: DeviceType[];
+  paging: Paging;
+}
