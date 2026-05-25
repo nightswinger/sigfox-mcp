@@ -200,7 +200,7 @@ const deviceMessageSchema = z.object({
     .array(downlinkAnswerStatusSchema)
     .optional()
     .describe('List of callback status for this reception.'),
-});
+}).loose();
 
 const outputSchema = {
   data: z.array(deviceMessageSchema).describe('The list of messages.'),
