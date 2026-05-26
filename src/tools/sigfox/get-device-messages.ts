@@ -91,9 +91,9 @@ const cbStatusSchema = z
     info: z.string().optional().describe('More details about the failure.'),
     cbDef: z.string().optional().describe('Callback definition triggered.'),
     time: z
-      .number()
+      .string()
       .optional()
-      .describe('Time the callback was called (in milliseconds since the Unix Epoch).'),
+      .describe('Time the callback was called (ISO 8601 format).'),
     attempts: z
       .number()
       .optional()
@@ -163,9 +163,9 @@ const downlinkAnswerStatusSchema = z
 const deviceMessageSchema = z.object({
   device: commonDeviceReadingSchema.optional().describe('The device that sent the message.'),
   time: z
-    .number()
+    .string()
     .optional()
-    .describe('Timestamp of the message (in milliseconds since the Unix Epoch).'),
+    .describe('Timestamp of the message (ISO 8601 format).'),
   data: z.string().optional().describe('Message content, hex encoded.'),
   ackRequired: z.boolean().optional().describe('True if an acknowledgement is required.'),
   lqi: z
@@ -230,8 +230,19 @@ const callback: SigfoxToolCallback<typeof inputSchema> = async (
     limit,
     offset,
   });
+  const data = response.data.map((message) => ({
+    ...message,
+    time: message.time !== undefined ? new Date(message.time).toISOString() : undefined,
+    rinfos: message.rinfos?.map((rinfo) => ({
+      ...rinfo,
+      cbStatus: rinfo.cbStatus?.map((cb) => ({
+        ...cb,
+        time: cb.time !== undefined ? new Date(cb.time).toISOString() : undefined,
+      })),
+    })),
+  }));
   const result = {
-    data: response.data,
+    data,
     paging: response.paging,
   };
 
