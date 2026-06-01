@@ -39,6 +39,10 @@ step('Stage manifest.json', () => {
   cpSync(join(repoRoot, 'manifest.json'), join(buildDir, 'manifest.json'));
 });
 
+step('Stage icon.png', () => {
+  cpSync(join(repoRoot, 'icon.png'), join(buildDir, 'icon.png'));
+});
+
 const manifest = JSON.parse(readFileSync(join(repoRoot, 'manifest.json'), 'utf8')) as { version: string; name: string };
 
 step('Stage production package.json', () => {

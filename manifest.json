@@ -14,6 +14,7 @@
     "url": "https://github.com/nightswinger/sigfox-mcp.git"
   },
   "homepage": "https://github.com/nightswinger/sigfox-mcp",
+  "icon": "icon.png",
   "server": {
     "type": "node",
     "entry_point": "server/index.js",
