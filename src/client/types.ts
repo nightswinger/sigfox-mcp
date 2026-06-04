@@ -25,6 +25,22 @@ export interface Device {
   contract?: DeviceRef;
 }
 
+export interface CreateDevicePayload {
+  id: string;
+  name: string;
+  deviceTypeId: string;
+  pac: string;
+  prototype?: boolean;
+  automaticRenewal?: boolean;
+  activable?: boolean;
+  lat?: number;
+  lng?: number;
+}
+
+export interface CreateDeviceResponse {
+  id: string;
+}
+
 export interface GetDevicesOptions {
   id?: string;
   groupIds?: string;

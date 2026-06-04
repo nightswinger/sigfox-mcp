@@ -1,5 +1,7 @@
 import type {
   CoveragePredictionsResponse,
+  CreateDevicePayload,
+  CreateDeviceResponse,
   Device,
   DeviceMessagesResponse,
   DeviceTypesResponse,
@@ -21,27 +23,37 @@ export class SigfoxAPIClient {
     this.authHeader = `Basic ${Buffer.from(`${login}:${password}`).toString("base64")}`;
   }
 
-  private async request<T>(path: string, queryParams: Record<string, string> = {}): Promise<T> {
+  private async request<T>(
+    method: string,
+    path: string,
+    data: Record<string, string> | unknown = {},
+  ): Promise<T> {
     const url = new URL(`${this.baseUrl}${path}`);
-    Object.entries(queryParams).forEach(([key, value]) => {
-      url.searchParams.set(key, value);
-    });
-
-    const res = await fetch(url.toString(), {
-      method: 'GET',
+    const init: RequestInit = {
+      method,
       headers: {
         Authorization: this.authHeader,
         'Content-Type': 'application/json',
       },
-    });
+    };
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}: ${data.message ?? JSON.stringify(data)}`);
+    if (method === 'GET') {
+      Object.entries(data as Record<string, string>).forEach(([key, value]) => {
+        url.searchParams.set(key, value);
+      });
+    } else {
+      init.body = JSON.stringify(data);
     }
 
-    return data as T;
+    const res = await fetch(url.toString(), init);
+
+    const body = await res.json();
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${body.message ?? JSON.stringify(body)}`);
+    }
+
+    return body as T;
   }
 
   async getDevice(deviceId: string, options: GetDeviceOptions = {}): Promise<Device> {
@@ -53,7 +65,7 @@ export class SigfoxAPIClient {
       queryParams.authorizations = String(options.authorizations);
     }
 
-    return this.request<Device>(`/devices/${deviceId}`, queryParams);
+    return this.request<Device>('GET', `/devices/${deviceId}`, queryParams);
   }
 
   async getDeviceMessages(
@@ -70,6 +82,7 @@ export class SigfoxAPIClient {
     if (options.offset !== undefined) queryParams.offset = String(options.offset);
 
     return this.request<DeviceMessagesResponse>(
+      'GET',
       `/devices/${deviceId}/messages`,
       queryParams,
     );
@@ -85,7 +98,7 @@ export class SigfoxAPIClient {
     if (options.radius !== undefined) queryParams.radius = String(options.radius);
     if (options.groupId !== undefined) queryParams.groupId = options.groupId;
 
-    return this.request<CoveragePredictionsResponse>('/coverages/global/predictions', queryParams);
+    return this.request<CoveragePredictionsResponse>('GET', '/coverages/global/predictions', queryParams);
   }
 
   async getDevices(options: GetDevicesOptions = {}): Promise<DevicesResponse> {
@@ -102,7 +115,7 @@ export class SigfoxAPIClient {
     if (options.limit !== undefined) queryParams.limit = String(options.limit);
     if (options.offset !== undefined) queryParams.offset = String(options.offset);
 
-    return this.request<DevicesResponse>('/devices/', queryParams);
+    return this.request<DevicesResponse>('GET', '/devices/', queryParams);
   }
 
   async getDeviceTypes(
@@ -118,6 +131,15 @@ export class SigfoxAPIClient {
     if (options.limit !== undefined) queryParams.limit = String(options.limit);
     if (options.offset !== undefined) queryParams.offset = String(options.offset);
 
-    return this.request<DeviceTypesResponse>('/device-types', queryParams);
+    return this.request<DeviceTypesResponse>('GET', '/device-types', queryParams);
+  }
+
+  async createDevice(payload: CreateDevicePayload): Promise<CreateDeviceResponse> {
+    if (!payload.id) throw new Error('id is required');
+    if (!payload.name) throw new Error('name is required');
+    if (!payload.deviceTypeId) throw new Error('deviceTypeId is required');
+    if (!payload.pac) throw new Error('pac is required');
+
+    return this.request<CreateDeviceResponse>('POST', '/devices/', payload);
   }
 }

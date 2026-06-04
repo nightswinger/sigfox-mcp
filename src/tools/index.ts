@@ -1,3 +1,4 @@
+import { createDevice } from "./sigfox/create-device.js";
 import { getDevice } from "./sigfox/get-device.js";
 import { getDeviceMessages } from "./sigfox/get-device-messages.js";
 import { getCoveragePredictions } from "./sigfox/get-coverage-predictions.js";
@@ -13,4 +14,5 @@ export const tools: readonly Tool<any, any>[] = [
   getCoveragePredictions,
   listDeviceTypes,
   listDevices,
+  createDevice,
 ];
