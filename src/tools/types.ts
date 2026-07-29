@@ -1,6 +1,5 @@
 import type { z, ZodRawShape, ZodTypeAny } from 'zod';
-import type { CallToolResult } from '@modelcontextprotocol/sdk/types';
-
+import type { CallToolResult } from "@modelcontextprotocol/server";
 import type { SigfoxAPIClient } from '../client/client.js';
 
 export type ToolCallbackOptions = {

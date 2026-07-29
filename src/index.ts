@@ -1,8 +1,6 @@
 import { parseArgs } from 'node:util';
-
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-
+import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
+import { McpServer } from "@modelcontextprotocol/server";
 import { createToolCallback, tools } from './tools/index.js';
 import { getSigfoxClient } from './client/index.js';
 
