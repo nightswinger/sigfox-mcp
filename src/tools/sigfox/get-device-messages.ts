@@ -39,7 +39,7 @@ const inputSchema = {
 const commonDeviceReadingSchema = z.object({
   id: z.string().describe("The device's identifier (hexadecimal format)."),
   name: z.string().optional().describe("The device's name."),
-});
+}).loose();
 
 const computedLocationSchema = z
   .object({
@@ -57,7 +57,8 @@ const computedLocationSchema = z
       .optional()
       .describe('The place ids computed by the Sigfox Geolocation service.'),
   })
-  .partial();
+  .partial()
+  .loose();
 
 const messageBaseStationSchema = z
   .object({
@@ -65,7 +66,8 @@ const messageBaseStationSchema = z
     name: z.string().optional().describe('The base station name.'),
     resourceType: z.number().optional().describe('Resource type. 0: SBS, 1: NAP.'),
   })
-  .partial();
+  .partial()
+  .loose();
 
 const repetitionSchema = z
   .object({
@@ -83,7 +85,8 @@ const repetitionSchema = z
       .optional()
       .describe('Whether this repetition has been propagated by a repeater.'),
   })
-  .partial();
+  .partial()
+  .loose();
 
 const cbStatusSchema = z
   .object({
@@ -99,7 +102,8 @@ const cbStatusSchema = z
       .optional()
       .describe('The number of attempts it took to send the callback.'),
   })
-  .partial();
+  .partial()
+  .loose();
 
 const rinfoSchema = z
   .object({
@@ -133,7 +137,8 @@ const rinfoSchema = z
       .optional()
       .describe('List of callback status for this reception.'),
   })
-  .partial();
+  .partial()
+  .loose();
 
 const downlinkAnswerStatusSchema = z
   .object({
@@ -145,6 +150,7 @@ const downlinkAnswerStatusSchema = z
         actions: z.array(z.string()).optional(),
       })
       .partial()
+      .loose()
       .optional()
       .describe('Base station to send downlink message.'),
     plannedPower: z
@@ -158,7 +164,8 @@ const downlinkAnswerStatusSchema = z
       .describe('Name of the first operator which received the message as roaming.'),
     country: z.string().optional().describe('Country of the operator.'),
   })
-  .partial();
+  .partial()
+  .loose();
 
 const deviceMessageSchema = z.object({
   device: commonDeviceReadingSchema.optional().describe('The device that sent the message.'),
@@ -212,7 +219,7 @@ const outputSchema = {
   paging: z
     .object({
       next: z.string().optional().describe('URL to the next page of results, if any.'),
-    })
+    }).loose()
     .describe('Pagination information.'),
 };
 
