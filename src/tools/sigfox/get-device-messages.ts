@@ -12,7 +12,7 @@ const inputSchema = {
     .string()
     .optional()
     .describe(
-      'Comma-separated list of additional fields to include in the response. Allowed values: oob, ackRequired, device(name), rinfos(cbStatus,rep,repetitions,baseStation(name)), downlinkAnswerStatus(baseStation(name)).',
+      'Comma-separated list of additional fields to include in the response. Allowed values: oob, ackRequired, device(name), rinfos, rinfos(cbStatus,rep,repetitions,baseStation(name)), downlinkAnswerStatus(baseStation(name)). Base station reception info (rinfos: RSSI, receiving base stations, delay, etc.) is omitted from the response unless this list contains "rinfos" — include it only when reception details are actually needed, since it greatly increases response size.',
     ),
   since: z
     .number()
@@ -192,7 +192,12 @@ const deviceMessageSchema = z.object({
     .array(computedLocationSchema)
     .optional()
     .describe('Provided only if the atlas option is enabled in your contract.'),
-  rinfos: z.array(rinfoSchema).optional().describe('Reception information from base stations.'),
+  rinfos: z
+    .array(rinfoSchema)
+    .optional()
+    .describe(
+      'Reception information from base stations. Only present when the request\'s fields parameter includes "rinfos".',
+    ),
   downlinkAnswerStatus: downlinkAnswerStatusSchema
     .optional()
     .describe('The last callback status for this reception.'),
@@ -230,16 +235,19 @@ const callback: SigfoxToolCallback<typeof inputSchema> = async (
     limit,
     offset,
   });
-  const data = response.data.map((message) => ({
+  const includeRinfos = fields?.includes('rinfos') ?? false;
+  const data = response.data.map(({ rinfos, ...message }) => ({
     ...message,
     time: message.time !== undefined ? new Date(message.time).toISOString() : undefined,
-    rinfos: message.rinfos?.map((rinfo) => ({
-      ...rinfo,
-      cbStatus: rinfo.cbStatus?.map((cb) => ({
-        ...cb,
-        time: cb.time !== undefined ? new Date(cb.time).toISOString() : undefined,
+    ...(includeRinfos && {
+      rinfos: rinfos?.map((rinfo) => ({
+        ...rinfo,
+        cbStatus: rinfo.cbStatus?.map((cb) => ({
+          ...cb,
+          time: cb.time !== undefined ? new Date(cb.time).toISOString() : undefined,
+        })),
       })),
-    })),
+    }),
   }));
   const result = {
     data,
