@@ -1,8 +1,16 @@
+#!/usr/bin/env node
+import { readFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
 import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
 import { McpServer } from "@modelcontextprotocol/server";
 import { createToolCallback, tools } from './tools/index.js';
 import { getSigfoxClient } from './client/index.js';
+
+// package.json sits one level above this file in every layout we ship:
+// src/ (dev), dist/ (npm package) and server/ (MCPB bundle).
+const { version } = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
+) as { version: string };
 
 const resolveCredentials = () => {
   const { values } = parseArgs({
@@ -32,7 +40,7 @@ const main = async () => {
   const transport = new StdioServerTransport();
 
   console.error('Starting MCP server...');
-  const server = new McpServer({ name: 'sigfox-mcp', version: '1.2.1' });
+  const server = new McpServer({ name: 'sigfox-mcp', version });
 
   const client = getSigfoxClient(login, password);
 

@@ -7,7 +7,20 @@ An MCP server (stdio transport) that wraps the Sigfox cloud API (`https://api.si
 - `pnpm build` — `tsc` typecheck + emit to `dist/`. Use this to verify a change compiles.
 - `pnpm dev` — `tsx --watch src/index.ts` for local iteration with credentials in env.
 - `pnpm build:mcpb` — produce the distributable `.mcpb` bundle via [scripts/build-mcpb.ts](scripts/build-mcpb.ts).
+- `pnpm pack` — build the npm tarball (`prepack` wipes `dist/` and re-runs `tsc` first). Use this to check what would be published.
 - No test suite exists. Manual verification via an MCP client is the bar.
+- `npm` commands fail inside this repo with `EBADDEVENGINES` (`devEngines` pins pnpm). Use `pnpm`, or `corepack pnpm` if the `pnpm` shim is not set up.
+
+## Distribution and releasing
+
+The server ships two ways from the same `tsc` output: as the npm package `sigfox-mcp` (run with `npx -y sigfox-mcp`; `bin` points at `dist/index.js`, and only `dist/` is published) and as an MCPB bundle for Claude Desktop.
+
+To release:
+
+1. Bump the version in **both** [package.json](package.json) and [manifest.json](manifest.json). The server reads its own version from `package.json` at runtime, so nothing in `src/` needs editing.
+2. If tools were added or removed, update the `tools` list in [manifest.json](manifest.json).
+3. Merge to `main`, then run `pnpm publish` from `main` (needs `npm login` first). A published version can never be overwritten.
+4. Tag `v<version>`, run `pnpm build:mcpb`, and attach the `.mcpb` file to a GitHub Release.
 
 ## Architecture
 
@@ -35,7 +48,7 @@ The OpenAPI spec at [docs/openapi.json](docs/openapi.json) is the source of trut
 3. Add a client method to [src/client/client.ts](src/client/client.ts) following the `Record<string, string>` query-param pattern.
 4. Create a tool file in [src/tools/sigfox/](src/tools/sigfox/) modeled on an existing one (`list-*` mirrors [list-device-types.ts](src/tools/sigfox/list-device-types.ts); single-resource `get-*` mirrors [get-device.ts](src/tools/sigfox/get-device.ts)).
 5. Register the tool in the `tools` array in [src/tools/index.ts](src/tools/index.ts).
-6. Add a row to the tools table in [README.md](README.md).
+6. Add a row to the tools table in [README.md](README.md) and an entry to the `tools` list in [manifest.json](manifest.json).
 7. Run `pnpm build` to typecheck.
 
 ## Imports

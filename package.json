@@ -1,18 +1,42 @@
 {
   "name": "sigfox-mcp",
-  "version": "1.2.1",
-  "description": "",
-  "main": "dist/index.js",
+  "version": "1.3.0",
+  "description": "Unofficial MCP server exposing the Sigfox cloud API (devices, device types, messages, coverage) as tools.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "sigfox",
+    "iot",
+    "lpwan"
+  ],
+  "author": "nightswinger",
+  "license": "MIT",
+  "homepage": "https://github.com/nightswinger/sigfox-mcp#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nightswinger/sigfox-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nightswinger/sigfox-mcp/issues"
+  },
+  "type": "module",
+  "bin": {
+    "sigfox-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "tsc",
     "build:mcpb": "tsx scripts/build-mcpb.ts",
     "dev": "tsx --watch src/index.ts",
     "inspect": "pnpm build && pnpm dlx @modelcontextprotocol/inspector@2.0.0 --web node dist/index.js -e SIGFOX_LOGIN=$SIGFOX_LOGIN -e SIGFOX_PASSWORD=$SIGFOX_PASSWORD",
+    "prepack": "rm -rf dist && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
@@ -20,7 +44,6 @@
       "onFail": "download"
     }
   },
-  "type": "module",
   "devDependencies": {
     "@anthropic-ai/mcpb": "^2.1.2",
     "@types/node": "^25.8.0",
